@@ -19,7 +19,7 @@ $filterLocale = (bool) $this->siteSetting('filter_locale_values');
 $lang = $this->lang();
 
 $title = "dcterms:title";
-$author = "dcterms:creator";
+$authors = "dcterms:creator";
 $blurb = "dcterms:description";
 $keywords = "dcterms:subject";
 $pub_date = "dcterms:issued";
@@ -31,17 +31,31 @@ $license ="dcterms:license";
 ?>
     <div class="container">
         <div class="row">
-    <?php
-foreach ($this->resources as $resource): ?>
+    <?php foreach ($this->resources as $resource): ?>
         <div class="col-md-4">
-            <div class="card">
-                <img class="card-img-top" src="<?php echo $resource->primaryMedia()->thumbnailUrl('square') ?>" alt="Card image cap">
-                <div class="card-body">
-                    <h2 class="card-title"><?php echo $resource->values()[$title]['values'][0] ?></h2>
-                    <p class="card-text author"><?php echo $resource->values()[$title]['values'][0] ?></p>
-                    <a href="#" class="btn btn-light">Go somewhere</a>
-                </div>
-            </div>
+            <?php echo $resource->displayValues(['viewName' => 'common/publications/catalog-index']) ?>
+<!--            <div class="card">-->
+<!--                <img class="card-img-top" src="--><?php //echo $resource->primaryMedia()->thumbnailUrl('square') ?><!--" alt="Card image cap">-->
+<!--                <div class="card-body">-->
+<!--                    //this assumes text data-->
+<!--                    <h2 class="card-title">--><?php //echo $resource->values()[$title]['values'][0] ?><!--</h2>-->
+<!--                    --><?php
+//                    echo 'title: ' . ($resource->values()[$authors]['values'][0]->valueResource()->title()) . '<br>';
+//                    echo 'linkPretty: ' . $resource->values()[$authors]['values'][0]->valueResource()->linkPretty() . '<br>';
+//                    echo 'displayDescription: ' . $resource->values()[$authors]['values'][0]->valueResource()->displayDescription() . '<br>';
+//                    echo 'displayTitle: ' . ($resource->values()[$authors]['values'][0]->valueResource()->displayTitle()) . '<br>';
+//                    echo 'url: ' . ($resource->values()[$authors]['values'][0]->valueResource()->url()) . '<br>';
+//
+//                    ?>
+<!---->
+<!--                    --><?php //foreach ($resource->values()[$authors]['values'] as $key => $value):
+////                        echo $key?>
+<!---->
+<!--<!--                        <p class="card-text author">-->--><?php ////echo $author ?><!--<!--</p>-->-->
+<!--                    --><?php //endforeach; ?>
+<!--                    <a href="#" class="btn btn-light">Go somewhere</a>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
 
 <?php endforeach; ?>
