@@ -29,5 +29,22 @@ $mentor = "dcterms:contributor";
 $license ="dcterms:license";
 
 ?>
+    <div class="container">
+        <div class="row">
+    <?php
+foreach ($this->resources as $resource): ?>
+        <div class="col-md-4">
+            <div class="card">
+                <img class="card-img-top" src="<?php echo $resource->primaryMedia()->thumbnailUrl('square') ?>" alt="Card image cap">
+                <div class="card-body">
+                    <h2 class="card-title"><?php echo $resource->values()[$title]['values'][0] ?></h2>
+                    <p class="card-text author"><?php echo $resource->values()[$title]['values'][0] ?></p>
+                    <a href="#" class="btn btn-light">Go somewhere</a>
+                </div>
+            </div>
+        </div>
 
+<?php endforeach; ?>
+    </div>
+    </div>
 
