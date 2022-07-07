@@ -17,45 +17,52 @@ $bodyTerm = $this->siteSetting('browse_body_property_term');
 
 $filterLocale = (bool) $this->siteSetting('filter_locale_values');
 $lang = $this->lang();
+$options = array();
+$viewName = 'common/publications/catalog-index';
+$title = '';
+$authors = '';
+$blurb = '';
 
-$title = "dcterms:title";
-$authors = "dcterms:creator";
-$blurb = "dcterms:description";
-$keywords = "dcterms:subject";
-$pub_date = "dcterms:issued";
-$doi = "bibo:doi";
-$abstract = "dcterms:abstract";
-$mentor = "dcterms:contributor";
-$license ="dcterms:license";
+//resource properties are indexed by the property's term
+if ($this->themeSetting('browse_preview_title')) {
+    $property = $this->api()->read('properties', ['id' => $this->themeSetting('browse_preview_title')]);
+    if ($property) {
+        $title = $property->getContent()->term();
+    }
+}
+if ($this->themeSetting('browse_preview_author')) {
+    $property = $this->api()->read('properties', ['id' => $this->themeSetting('browse_preview_author')]);
+    if ($property) {
+        $title = $property->getContent()->term();
+    }
+}
+
+if ($this->themeSetting('browse_preview_description')) {
+    $property = $this->api()->read('properties', ['id' => $this->themeSetting('browse_preview_description')]);
+    if ($property) {
+        $blurb = $property->getContent()->term();
+    }
+}
+
+$options =
+    [
+        'viewName' => $viewName,
+        'title' => $title,
+        'authors' => $authors,
+        'blurb' => $blurb,
+    ];
 
 ?>
     <div class="container">
         <div class="row">
     <?php foreach ($this->resources as $resource): ?>
         <div class="col-md-4">
-            <?php echo $resource->displayValues(['viewName' => 'common/publications/catalog-index']) ?>
-<!--            <div class="card">-->
-<!--                <img class="card-img-top" src="--><?php //echo $resource->primaryMedia()->thumbnailUrl('square') ?><!--" alt="Card image cap">-->
-<!--                <div class="card-body">-->
-<!--                    //this assumes text data-->
-<!--                    <h2 class="card-title">--><?php //echo $resource->values()[$title]['values'][0] ?><!--</h2>-->
-<!--                    --><?php
-//                    echo 'title: ' . ($resource->values()[$authors]['values'][0]->valueResource()->title()) . '<br>';
-//                    echo 'linkPretty: ' . $resource->values()[$authors]['values'][0]->valueResource()->linkPretty() . '<br>';
-//                    echo 'displayDescription: ' . $resource->values()[$authors]['values'][0]->valueResource()->displayDescription() . '<br>';
-//                    echo 'displayTitle: ' . ($resource->values()[$authors]['values'][0]->valueResource()->displayTitle()) . '<br>';
-//                    echo 'url: ' . ($resource->values()[$authors]['values'][0]->valueResource()->url()) . '<br>';
-//
-//                    ?>
-<!---->
-<!--                    --><?php //foreach ($resource->values()[$authors]['values'] as $key => $value):
-////                        echo $key?>
-<!---->
-<!--<!--                        <p class="card-text author">-->--><?php ////echo $author ?><!--<!--</p>-->-->
-<!--                    --><?php //endforeach; ?>
-<!--                    <a href="#" class="btn btn-light">Go somewhere</a>-->
-<!--                </div>-->
-<!--            </div>-->
+            <div class="card">
+                <img class="card-img-top" src="<?php echo $resource->primaryMedia()->thumbnailUrl('square') ?>" alt="Card image cap">
+                <div class="card-body">
+                    <?php echo $resource->displayValues($options) ?>
+                </div>
+            </div>
         </div>
 
 <?php endforeach; ?>
