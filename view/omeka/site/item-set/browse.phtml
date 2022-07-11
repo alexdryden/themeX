@@ -1,0 +1,52 @@
+<?php
+$translate = $this->plugin('translate');
+$escape = $this->plugin('escapeHtml');
+
+$this->htmlElement('body')->appendAttribute('class', 'item-set resource browse');
+?>
+<div class="col-md-12">
+<?php if ($this->themeSetting('uv_item_set') == 'top'): ?>
+    <div id="viewer-top"></div>
+<?php endif; ?>
+</div>
+<div class="col-md-9 offset-md-1-5">
+    <div class="main-content-container">
+<?php echo $this->pageTitle($translate('Item sets'), 2); ?>
+
+<?php echo $this->searchFilters(); ?>
+
+<div class="browse-controls">
+    <?php echo $this->pagination(); ?>
+    <?php echo $this->hyperlink($translate('Advanced search'), $this->url(null, ['action' => 'search'], true), ['class' => 'advanced-search']); ?>
+</div>
+
+<?php $this->trigger('view.browse.before'); ?>
+<ul class="resource-list">
+<?php
+$headingTerm = $this->siteSetting('browse_heading_property_term');
+$bodyTerm = $this->siteSetting('browse_body_property_term');
+foreach ($itemSets as $itemSet):
+    $heading = $headingTerm ? $itemSet->value($headingTerm, ['default' => $translate('[Untitled]')]) : $itemSet->displayTitle();
+    $body = $bodyTerm ? $itemSet->value($bodyTerm) : $itemSet->displayDescription();
+?>
+    <li class="item-set resource">
+        <?php echo $itemSet->linkRaw($this->thumbnail($itemSet, 'medium')); ?>
+        <h4><?php echo $itemSet->link($heading); ?></h4>
+        <?php if ($body): ?>
+        <div class="description"><?php echo $body; ?></div>
+        <?php endif; ?>
+    </li>
+<?php endforeach; ?>
+</ul>
+<?php echo $this->pagination(); ?>
+    </div>
+</div>
+<div class="col-md-12">
+    <?php if ($this->themeSetting('uv_item_set') == 'bottom'): ?>
+        <div id="viewer-bottom"></div>
+    <?php elseif ($this->themeSetting('uv_item_browse') == 'off'): ?>
+        <div id="viewer-off"></div>
+    <?php endif; ?>
+
+    <?php $this->trigger('view.browse.after'); ?>
+</div>

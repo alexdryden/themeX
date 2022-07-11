@@ -1,0 +1,126 @@
+<?php
+$this->headLink()->appendStylesheet($this->assetUrl('css/page-blocks.css'));
+$this->htmlElement('body')->appendAttribute('class', 'page');
+$this->pageTitle($page->title(), 2);
+$showPagePagination = $this->siteSetting('show_page_pagination', true);
+$default_thumb = $this->assetUrl('img/Placeholder.png');
+$escape = $this->plugin('escapeHtml');
+
+//if a home page has been set, give non-homepages a smaller header
+$currentSlug = $page->slug();
+if ($site->homepage()){
+    $homepageSlug = $site->homepage()->slug();
+} else {
+    $homepageSlug = $currentSlug;
+}
+$currentSlug = $page->slug();
+if ($currentSlug == $homepageSlug) {
+    $this->htmlElement('body')->appendAttribute('class', 'homepage');
+}
+?>
+<?php
+$nav = $site->publicNav();
+$container = $nav->getContainer();
+
+$activePage = $nav->findActive($container);
+if ($activePage):
+if ($activePage['depth'] !== 0) {
+    $allRootPages = $container->getPages();
+
+    foreach ($allRootPages as $page) {
+        if ($page->isActive($recursive = true)) {
+            $activeRoot = $page;
+        }
+    }
+} else {
+    $activeRoot = $activePage['page'];
+}
+$activeRoot = $activeRoot->toArray();
+$child_pages = $activeRoot['pages'];
+    ?>
+    <nav class="breadcrumbs">
+    <?php if ($activePage['depth'] !== 0): ?>
+    <?php echo $nav->breadcrumbs(); ?>
+<?php endif; ?>
+    </nav>
+<?php endif; ?>
+
+<?php $this->trigger('view.show.before'); ?>
+    <div class="row">
+<?php if (!$this->themeSetting('side_nav') && $activePage && count($child_pages) != 0): ?>
+        <div class="col-md-3">
+            <div class="table-of-contents-nav">
+                <?php if ($this->themeSetting('side_nav_title')): ?>
+                    <h3><?php echo $this->escapeHtml($this->themeSetting('side_nav_title'));?></h3>
+                <?php endif; ?>
+                <?php printNav($activeRoot, $activePage['page']->toArray()); ?>
+            </div>
+        </div>
+        <div class="col-md-9">
+<?php else: ?>
+    <div class="col-md-12">
+<?php endif; ?>
+            <div class="main-content-container">
+                <div class="blocks">
+                    <?php echo $this->content; ?>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        <?php $this->trigger('view.show.after'); ?>
+        <?php if ($showPagePagination): ?>
+            <?php echo $this->sitePagePagination(); ?>
+        <?php endif; ?>
+    </div>
+    </div>
+<?php
+function getThumbnail($page, $default, $size){
+    //default thumbnail if the page has no media
+    $url = $default;
+    $alt = 'Default image for next page when no specific media was found for the page';
+    //get the first media attachment on the target page
+    foreach($page->blocks() as $block){
+        if (get_class($block) === 'Omeka\Api\Representation\SitePageBlockRepresentation'){
+            if ($block->attachments()){
+                $media = false;
+                foreach ($block->attachments() as $attachment):
+                    if($attachment->media()){
+                        $media = $attachment->media();
+                    } elseif ($attachment->item() && $attachment->item()->primaryMedia()){
+                        $media = $attachment->item()->primaryMedia();
+                    }
+                    if ($media){
+
+                        if ($thumbnail = $media->thumbnail()) {
+                            $url = $thumbnail->assetUrl();
+                        } else {
+                            $url = $media->thumbnailUrl($size);
+                        }
+
+                        if ($media->primaryMedia()->altTextResolved()
+                        ) {
+                            $alt = $media->primaryMedia()->altTextResolved();
+                        } else {
+                            $alt = 'Thumbnail preview for next page';
+                        }
+                        break 2;
+                    }
+                endforeach;
+            }
+        }
+    }
+    return ['url' => $url, 'alt' => $alt];
+}
+function printNav($parentPage, $activePage) {
+    if (count($parentPage) != 0) {
+        if ($activePage['params']['page-slug'] == $parentPage['params']['page-slug']) {
+            echo '<ul><li id="current-toc">' . $parentPage['label'] . '</li>';
+        } else {
+            echo '<ul><li><a href="' . $parentPage['params']['page-slug'] . '">' . $parentPage['label'] . '</a></li>';
+        }
+        $children = $parentPage['pages'];
+        foreach ($children as $child) {
+            printNav($child, $activePage);
+        }
+        echo '</ul>';
+    }
+}
