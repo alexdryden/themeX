@@ -1,0 +1,430 @@
+#content {
+    padding: 0 (2 * gutter()) $spacing-l;
+}
+
+table {
+    margin: $spacing-l 0;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    text-align: left;
+    padding: $spacing-s $spacing-m;
+    padding-bottom: $spacing-s - 1px;
+    border-bottom: 1px solid $gray;
+}
+
+/* @group ----- Header ----- */
+
+header {
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+header > * {
+    padding: 0 (2 * gutter());
+}
+
+header > h1 {
+    margin: $spacing-s auto;
+}
+
+/* @end */
+
+/* @group ----- Footer ----- */
+
+footer {
+    padding: 0 (2 * gutter()) $spacing-l;
+}
+
+/* @end */
+
+/* @group ----- Navigation ----- */
+
+header nav {
+    margin: 0 auto !important;
+    position: static;
+    box-shadow: 0 0 10px 2px #858585;
+}
+
+header nav:before {
+    content: "";
+    border: 0;
+    display: none;
+}
+
+header nav ul li {
+    position: static;
+}
+
+header nav.closed ul,
+header nav ul ul li {
+    height: auto;
+    overflow: visible;
+}
+
+header nav ul a:hover {
+    background-color: transparent;
+}
+
+header nav ul li,
+header nav > ul li:last-child,
+header nav > ul ul:hover > li {
+    border: 0;
+}
+
+header nav ul.navigation {
+    margin-left: auto;
+    margin-right:auto;
+    padding: 0 15px;
+    position: static;
+    display: flex;
+    align-items: flex-end;
+    max-width: 1140px;
+
+    li ul:before {
+        display: none;
+    }
+
+    & > li > ul {
+        position: absolute;
+        top: 100%;
+        opacity:0;
+        background-color: #fff;
+        list-style: none;
+        padding: 0;
+        z-index: 11;
+        display:none;
+    }
+
+    & > li > ul a {
+        padding: .75rem 2rem;
+        &:hover {
+            background-color: #d2d2d2;
+        }
+    }
+
+    & > li:hover > ul {
+        display:block;
+        opacity:1;
+        transition-delay: .1s;
+        border-bottom: 0;
+        border-color: $light;
+        box-shadow: 0 0 10px 2px #858585;
+        clip-path: inset(0px -9999px -9999px -9999px);
+
+        &:after {
+            content: "";
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            border-bottom: 1px solid $light;
+            z-index: -1;
+        }
+    }
+
+    & > li > ul > li {
+        width: 100%;
+        font-size: .75 * $base-font-size;
+        padding-bottom: $spacing-l;
+    }
+
+    & > li > ul > li ul {
+        font-weight: normal;
+        list-style-type: none;
+        height: auto;
+    }
+
+    li.parent {
+        position: static;
+    }
+
+    li.active > a {
+        background-color: #d2d2d2;
+    }
+
+    & > li.active > a {
+        background-color: white;
+    }
+}
+
+header nav > ul > li > a {
+    margin: $spacing-s;
+}
+
+header nav > ul > li > .parent-link {
+    display: inline-block;
+    width: 100%;
+}
+
+header nav > ul > li > .parent-link > a {
+    margin: $spacing-s;
+    width: 100%;
+}
+
+/* All top-level nav items with siblings are parent items and get an arrow. */
+header nav > ul > li > .parent-link a:after {
+    font-family: "Font Awesome 5 Free";
+    content: "\f105";
+    display: inline-block;
+    margin-left: $spacing-s;
+    transition: transform .1s ease-in-out;
+}
+
+header nav > ul > li:hover > .parent-link a:after {
+    transform: rotate(90deg);
+}
+
+header nav > ul li:hover ul li {
+    height: auto;
+    padding: 0;
+}
+
+.child-toggle {
+    display: none;
+}
+
+/* Second and Third level items */
+header .parent ul a {
+    padding-left: 0;
+}
+
+header .parent .parent .parent ul a {
+    padding-left: .5 * $spacing-l;
+}
+
+.sub-menu ul {
+    border-bottom: 1px solid $light;
+    padding-bottom: ($spacing-m - 1px);
+}
+
+.sub-menu li {
+    display: inline-block;
+    border: 0;
+    padding: 0;
+    margin-right: $spacing-m;
+
+    &:first-of-type {
+        border: 0;
+        padding: 0;
+    }
+}
+
+#search {
+    padding: $spacing-s;
+}
+
+#search-form::before {
+    width:355px;
+}
+
+#search form input[type="text"],
+#search form button[type="submit"] {
+    height: $base-line-height;
+    font-size: .75 * $base-font-size;
+    line-height: $base-line-height;
+}
+
+#search form button[type="submit"] {
+    width: 55px;
+    height: $base-line-height;
+    padding: 0;
+
+    &:before {
+        line-height: $base-line-height;
+    }
+}
+#search form input[type="text"] {
+    width:100px;
+    transition: width .2s ease-out;
+}
+#search form:focus-within input[type="text"] {
+    width:300px;
+}
+
+/* @end */
+
+/* @group ----- Resource List ----- */
+
+ul.resource-list .resource img {
+    width: 4 * $spacing-l;
+    height: auto;
+    float: right;
+    margin-left: $spacing-m;
+}
+
+ul.resource-list .resource img ~ * {
+    width: calc(100% - #{4.5 * $spacing-l});
+}
+
+/* @end */
+
+/* @group ----- Item Set ----- */
+
+body.item-set.item #content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-end;
+
+    & > h2,
+    & > h3 {
+        width: 100%;
+    }
+}
+
+body.item-set .metadata {
+    width: span(4 of 12 alpha);
+    border-left: 5px solid $light;
+    padding-left: gutter();
+    margin-right: gutter();
+}
+
+body.item-set .metadata h4:first-of-type {
+    margin-top: 0;
+}
+
+body.item-set #content .metadata ~ * {
+    width: span(8 of 12 omega);
+    border-left: 1px solid $light;
+    padding-left: gutter();
+}
+
+body.item-set .item-set-items h3 {
+    margin-top: 0;
+}
+
+body.item-set .metadata ~ nav.pagination:first-of-type {
+    margin-bottom: 0;
+}
+
+
+/* @end */
+
+/* @group ----- Page and blocks ----- */
+
+.preview-block {
+    clear: both;
+}
+
+ul.preview.resource-list li:first-of-type {
+    border-top: 1px solid $light;
+    padding-top: ($spacing-l - 1px);
+}
+header nav ul.navigation li.parent,
+header nav ul.navigation li,
+header nav ul.navigation li.parent div.parent-link {
+    padding: 0;
+    margin: 0;
+}
+header nav ul.navigation li.parent div.parent-link a {
+    display: inline-block;
+    margin: 0;
+}
+
+
+header nav ul li a {
+    display: inline-block;
+    padding: 0.7em 1em;
+    margin: 0;
+}
+
+.parent-link + ul {
+    padding-left:2rem
+}
+
+.site-title h1 {
+    font-size:6rem;
+}
+
+.col-md-6:not(:first-child) {
+    margin-top:0
+}
+
+.card-block p {
+    font-size:2rem;
+}
+
+.ksharp-nav-title {
+    font-size: 2.25rem;
+}
+
+.ksharp-nav-button {
+    width: 40%;
+}
+
+.offset-md-1-5 {
+    margin-left: 12.5%
+}
+
+.nav-card .col-auto, .nav-card .col {
+    padding-left:15px;
+    padding-right:15px;
+}
+
+.nav-card .row {
+    margin-left:-15px;
+    margin-right:-15px;
+}
+
+.banner-caption {
+    right: 10px;
+}
+
+header nav {
+    background-color:#192947;
+
+    ul {
+        top:0;
+        a {
+            color: white !important
+        }
+        li {
+            padding: 7px 0;
+        }
+        li:hover {
+            background-color: white;
+        }
+    }
+}
+
+.center.file img, .center.file video {
+    width:50%
+}
+
+.universal-viewer {
+    margin-bottom: 3rem;
+}
+
+.center .caption {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.banner {
+    background-size: contain;
+}
+
+.homepage .banner {
+    min-height:60vh
+}
+
+@media (max-width:1024px) {
+    .homepage {
+        background-size: contain;
+    }
+    .banner {
+        min-height:40vh
+    }
+}
+
+blockquote {
+    margin: 1em 4rem;
+}
+/* @end */
+
