@@ -43,6 +43,8 @@ $count = 2;
 
 <div class="container">
     <?php foreach ($resources as $resource): ?>
+        <?php $thumbnail = $this->assetUrl('img/Placeholder.png'); ?>
+        <?php $alt = '' ?>
         <?php  $count+=1 ?>
         <?php if ($count%2): ?>
             <div class="row">
@@ -52,7 +54,13 @@ $count = 2;
             <div class="card mb-3 toc-card " style="max-width: 540px; background: #E8E9EB;" >
                 <div class="row g-0 toc-row">
                     <div class="col-md-4">
-                        <a href="<?php echo $resource->siteUrl() ?>"> <img src="<?php echo $resource->primaryMedia()->thumbnailUrl('large') ?>" class="img-fluid rounded-start" alt="<?php echo $resource->primaryMedia()->altText() ?>"></a>
+                        <?php if ($resource->primaryMedia()): ?>
+                            <?php
+                            $thumbnail = $resource->primaryMedia()->thumbnailUrl('large');
+                            $alt = 'alt="' . $resource->primaryMedia()->altText() . '"'
+                            ?>
+                        <?php endif; ?>
+                        <a href="<?php echo $resource->siteUrl() ?>"> <img src="<?php echo $thumbnail ?>" class="img-fluid rounded-start" <?php echo $alt ?>></a>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body" style="border: none">
