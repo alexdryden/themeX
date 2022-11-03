@@ -4,7 +4,7 @@ $escape = $this->plugin('escapeHtml');
 ?>
 
 <?php if ($this->heading): ?>
-<h2><?php echo $this->heading; ?></h2>
+<h2 class="toc-card-header"><?php echo $this->heading; ?></h2>
 <?php endif; ?>
 
 <div class="resource-list preview">
@@ -17,55 +17,58 @@ $bodyTerm = $this->siteSetting('browse_body_property_term');
 
 $filterLocale = (bool) $this->siteSetting('filter_locale_values');
 $lang = $this->lang();
+$pub_template = $this->themeSetting('publication_template');
+$author_template = $this->themeSetting('author_template');
 $options = array();
-$viewName = 'common/publications/catalog-index';
-$title = '';
-$authors = '';
-$blurb = '';
 
-//resource properties are indexed by the property's term
-if ($this->themeSetting('browse_preview_title')) {
-    $property = $this->api()->read('properties', ['id' => $this->themeSetting('browse_preview_title')]);
-    if ($property) {
-        $title = $property->getContent()->term();
-    }
-}
-if ($this->themeSetting('browse_preview_author')) {
-    $property = $this->api()->read('properties', ['id' => $this->themeSetting('browse_preview_author')]);
-    if ($property) {
-        $title = $property->getContent()->term();
+//determine if this browse preview is for one of the special templates
+if (array_key_exists('resource_template_id', $query) && count($query['resource_template_id']) == 1) {
+    if ($query['resource_template_id'][0] == $pub_template) {
+        $options['viewName'] = 'common/publications/index';
+    } elseif ($query['resource_template_id'][0] == $author_template) {
+        $options['viewName'] = 'common/authors/index';
     }
 }
 
-if ($this->themeSetting('browse_preview_description')) {
-    $property = $this->api()->read('properties', ['id' => $this->themeSetting('browse_preview_description')]);
-    if ($property) {
-        $blurb = $property->getContent()->term();
-    }
-}
-
-$options =
-    [
-        'viewName' => $viewName,
-        'title' => $title,
-        'authors' => $authors,
-        'blurb' => $blurb,
-    ];
-
+$count = 2;
 ?>
-    <div class="container">
-        <div class="row">
     <?php foreach ($this->resources as $resource): ?>
-        <div class="col-md-4">
-            <div class="card">
-                <img class="card-img-top" src="<?php echo $resource->primaryMedia()->thumbnailUrl('square') ?>" alt="Card image cap">
-                <div class="card-body">
-                    <?php echo $resource->displayValues($options) ?>
+
+<?php endforeach; ?>
+
+    </div>
+    </div>
+
+<?php $count = 0; ?>
+
+<div class="container">
+    <?php foreach ($resources as $resource): ?>
+        <?php  $count+=1 ?>
+        <?php if ($count%2): ?>
+            <div class="row">
+        <?php endif; ?>
+
+        <div class="col-lg-6 mb-4">
+            <div class="card mb-3 toc-card " style="max-width: 540px; background: #E8E9EB;" >
+                <div class="row g-0 toc-row">
+                    <div class="col-md-4">
+                        <a href="<?php echo $resource->siteUrl() ?>"> <img src="<?php echo $resource->primaryMedia()->thumbnailUrl('large') ?>" class="img-fluid rounded-start" alt="<?php echo $resource->primaryMedia()->altText() ?>"></a>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body" style="border: none">
+                            <?php echo $resource->displayValues($options) ?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <?php if ($count % 2 == 0): ?>
+            </div>
+    <?php endif; ?>
 <?php endforeach; ?>
-    </div>
-    </div>
 
+    <?php if ($count % 2): ?>
+</div>
+<?php endif; ?>
+</div>

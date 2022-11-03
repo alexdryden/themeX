@@ -15,7 +15,12 @@ if ($this->status()->isSiteRequest()) {
 }
 //$resource_template = $resources[0];
 //resource properties are indexed by the property's term
+echo gettype($this->themeSetting('browse_preview_title'));
+echo ($this->themeSetting('browse_preview_title'));
 if ($this->themeSetting('browse_preview_title')) {
+    $logger = $this->getServiceLocator()->get('Omeka\Logger');
+    $logger->err('err');
+    echo var_export($this->themeSetting('browse_preview_title'));
     $property = $this->api()->read('properties', ['id' => $this->themeSetting('browse_preview_title')]);
     if ($property) {
         $title = $property->getContent()->term();
@@ -27,7 +32,7 @@ if ($this->themeSetting('browse_preview_author')) {
         $authors = $property->getContent()->term();
     }
 }
-
+echo ($this->themeSetting('browse_preview_description'));
 if ($this->themeSetting('browse_preview_description')) {
     $property = $this->api()->read('properties', ['id' => $this->themeSetting('browse_preview_description')]);
     if ($property) {
