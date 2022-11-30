@@ -12,11 +12,10 @@ $this->headLink()->prependStylesheet('//fonts.googleapis.com/css?family=Open+San
 $this->headScript()->prependFile($this->assetUrl('js/default.js'));
 $this->headScript()->prependFile($this->assetUrl('js/global.js', 'Omeka'));
 $this->headScript()->prependFile($this->assetUrl('vendor/jquery/jquery.min.js', 'Omeka'));
-$this->headLink()->appendStylesheet('https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css');
-$this->headLink()->appendStylesheet($this->assetUrl('css/page-blocks.css'));
-
-//$this->headLink()->prependStylesheet($this->assetUrl('css/bootstrap.css'));
+//$this->headLink()->appendStylesheet('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css');
+$this->headLink()->prependStylesheet($this->assetUrl('css/bootstrap.css'));
 $this->headScript()->prependFile('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js');
+$this->headScript()->prependFile('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js');
 
 $this->jsTranslate();
 $this->trigger('view.layout');
@@ -84,7 +83,7 @@ $userBar = $this->userBar();
             </div>
         <?php endif; ?>
 
-        <nav style="font-size: 2em">
+        <nav>
             <?php
             echo $site->publicNav()->menu()->renderMenu(null, [
                 'maxDepth' => $this->themeSetting('nav_depth') - 1
