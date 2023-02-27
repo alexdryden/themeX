@@ -129,7 +129,7 @@ header nav ul.navigation {
 
     & > li > ul > li {
         width: 100%;
-        font-size: .75 * $base-font-size;
+        //font-size: .75 * $base-font-size;
         padding-bottom: $spacing-l;
     }
 
@@ -225,7 +225,7 @@ header .parent .parent .parent ul a {
 #search form input[type="text"],
 #search form button[type="submit"] {
     height: $base-line-height;
-    font-size: .75 * $base-font-size;
+    font-size: 1.5rem;
     line-height: $base-line-height;
 }
 
