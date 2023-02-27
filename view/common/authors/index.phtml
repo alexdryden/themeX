@@ -1,0 +1,41 @@
+<?php
+$translate = $this->plugin('translate');
+$escape = $this->plugin('escapeHtml');
+$labelInfo = $this->setting('property_label_information');
+if ($this->status()->isSiteRequest()) {
+    $showLocale = (bool) $this->siteSetting('show_locale_label', true);
+    $filterLocale = $this->siteSetting('filter_locale_values');
+    $lang = $this->lang();
+    $showValueAnnotations = (bool) $this->siteSetting('show_value_annotations', false);
+} else {
+    $showLocale = true;
+    $filterLocale = false;
+    $lang = null;
+    $showValueAnnotations = true;
+}
+//$resource_template = $resources[0];
+//resource properties are indexed by the property's term
+if ($this->themeSetting('author_browse_preview_name')) {
+    $property = $this->api()->read('properties', ['id' => $this->themeSetting('author_browse_preview_name')]);
+    if ($property) {
+        $name = $property->getContent()->term();
+    }
+}
+if ($this->themeSetting('author_browse_preview_bio')) {
+    $property = $this->api()->read('properties', ['id' => $this->themeSetting('author_browse_preview_bio')]);
+    if ($property) {
+        $bio = $property->getContent()->term();
+    }
+}
+
+
+?>
+<?php if ($name && array_key_exists($name, $values)): ?>
+    <h3 class="card-title publication title"><a href=""> <?php echo $values[$name]['values'][0] ?></a></h3>
+<?php endif; ?>
+
+<?php if ($bio && array_key_exists($bio, $values) ): ?>
+    <?php $primary_bio = $values[$bio]['values'][0]; ?>
+        <h4 class="card-subtitle scholar name"><?php echo $primary_bio->asHtml() ?></h4>
+<?php endif; ?>
+
