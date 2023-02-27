@@ -1,0 +1,61 @@
+<?php
+$translate = $this->plugin('translate');
+$escape = $this->plugin('escapeHtml');
+$labelInfo = $this->setting('property_label_information');
+if ($this->status()->isSiteRequest()) {
+    $showLocale = (bool) $this->siteSetting('show_locale_label', true);
+    $filterLocale = $this->siteSetting('filter_locale_values');
+    $lang = $this->lang();
+    $showValueAnnotations = (bool) $this->siteSetting('show_value_annotations', false);
+} else {
+    $showLocale = true;
+    $filterLocale = false;
+    $lang = null;
+    $showValueAnnotations = true;
+}
+//$resource_template = $resources[0];
+//resource properties are indexed by the property's term
+if ($this->themeSetting('browse_preview_title')) {
+    $property = $this->api()->read('properties', ['id' => $this->themeSetting('browse_preview_title')]);
+    if ($property) {
+        $title = $property->getContent()->term();
+    }
+}
+if ($this->themeSetting('browse_preview_author')) {
+    $property = $this->api()->read('properties', ['id' => $this->themeSetting('browse_preview_author')]);
+    if ($property) {
+        $authors = $property->getContent()->term();
+    }
+}
+if ($this->themeSetting('browse_preview_description')) {
+    $property = $this->api()->read('properties', ['id' => $this->themeSetting('browse_preview_description')]);
+    if ($property) {
+        $blurb = $property->getContent()->term();
+    }
+}
+
+?>
+<?php if ($title && array_key_exists($title, $values)): ?>
+    <h3 class="card-title publication title"><a href=""> <?php echo $values[$title]['values'][0] ?></a></h3>
+<?php endif; ?>
+
+<?php if ($authors && array_key_exists($authors, $values) ): ?>
+    <?php if (count($values[$authors]['values']) >= 6): ?>
+    <?php $lead_author = $values[$authors]['values'][0]; ?>
+        <h4 class="card-subtitle publication author"><?php echo $lead_author->valueResource()->displayTitle() ?>, et al. </h4>
+    <?php else: ?>
+        <ul class="resource-list">
+        <?php foreach ($values[$authors]['values'] as $author):  ?>
+<!--            <li class="item">--><?php //echo $author->asHtml(['thumbnailType'=>'none']) ?><!--</li>-->
+
+            <li class="item publication author"> <a href="<?php echo $author->valueResource()->url() ?>"> <?php echo $author->valueResource()->title() ?></a></li>
+            </ul>
+        <?php endforeach; ?>
+    <?php endif; ?>
+<?php endif; ?>
+
+<?php if ($blurb && array_key_exists($blurb, $values)): ?>
+    <h4 class="card-text publication blurb"><?php echo $values[$blurb]['values'][0]?> </h4>
+<?php endif; ?>
+
+
